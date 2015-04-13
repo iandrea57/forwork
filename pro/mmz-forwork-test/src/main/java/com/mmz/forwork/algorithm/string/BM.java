@@ -126,7 +126,7 @@ public class BM {
     public static void main(String[] args) {
         String text = "abcaacbabbacabcabababb";
         String find = "bcababab";
-//        System.out.println(KMP.find(text.toCharArray(), find.toCharArray()));
+        System.out.println(KMP.find(text.toCharArray(), find.toCharArray()));
         System.out.println(BM.find(text.toCharArray(), find.toCharArray()));
 
         String test = "aaaaabaaaa";
