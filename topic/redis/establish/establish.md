@@ -28,6 +28,29 @@
 #### redis配合zookeeper集群搭建
 /data/zoo/jdk/bin/java -Drediscluster.log.dir=/data/zoo/redis-cluster.finance.cache/agent/logs -Drediscluster.root.logger=INFO,NORMAL -Drediscluster.log.file=agent_10.4.35.95_63794_4_54794.log -XX:+UseParallelGC -XX:+UseParallelOldGC -XX:+UseAdaptiveSizePolicy -XX:-UseGCOverheadLimit -Xms128M -Xmx256M -cp /data/zoo/redis-cluster.finance.cache/agent/RedisCluster-2.1.0.0-SNAPSHOT-jar-with-dependencies-20121112.jar com.renren.cluster.agent.redis.RedisAgent finance.cache 4 webzk1.d.xiaonei.com:2181,webzk2.d.xiaonei.com:2181,webzk3.d.xiaonei.com:2181,webzk4.d.xiaonei.com:2181,webzk5.d.xiaonei.com:2181 10.4.35.95 63794 54794
 
+    /data/zoo/jdk/bin/java
+    -Drediscluster.log.dir=/data/zoo/redis-cluster.finance.cache/agent/logs
+    -Drediscluster.root.logger=INFO,NORMAL
+    -Drediscluster.log.file=agent_10.4.35.95_63794_4_54794.log
+    -XX:+UseParallelGC
+    -XX:+UseParallelOldGC
+    -XX:+UseAdaptiveSizePolicy
+    -XX:-UseGCOverheadLimit
+    -Xms128M
+    -Xmx256M
+    -cp
+    /data/zoo/redis-cluster.finance.cache/agent/RedisCluster-2.1.0.0-SNAPSHOT-jar-with-dependencies-20121112.jar
+
+    com.renren.cluster.agent.redis.RedisAgent
+
+    finance.cache
+    4
+    webzk1.d.xiaonei.com:2181,webzk2.d.xiaonei.com:2181,webzk3.d.xiaonei.com:2181,webzk4.d.xiaonei.com:2181,webzk5.d.xiaonei.com:2181
+    10.4.35.95
+    63794
+    54794
+   
+
 ##### zk数据
 
     [zk: webzk1.d.xiaonei.com:2181,webzk2.d.xiaonei.com:2181,webzk3.d.xiaonei.com:2181,webzk4.d.xiaonei.com:2181,webzk5.d.xiaonei.com:2181(CONNECTED) 21] ls /redis-ha/finance.cache/0/10.4.35.94:63790
