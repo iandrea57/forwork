@@ -23,12 +23,12 @@ public class Sunday {
     }
 
     private static int[] buildNext(char[] find) {
-        int[] bad = new int[256];
-        for (int i = 0; i < bad.length; i++)
-            bad[i] = find.length + 1;
+        int[] next = new int[256];
+        for (int i = 0; i < next.length; i++)
+            next[i] = find.length + 1;
         for (int i = 0; i < find.length; i++)
-            bad[find[i]] = find.length - i;
-        return bad;
+            next[find[i]] = find.length - i;
+        return next;
     }
 
     public static void main(String[] args) {
