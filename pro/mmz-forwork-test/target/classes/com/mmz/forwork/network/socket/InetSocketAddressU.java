@@ -29,5 +29,7 @@ public class InetSocketAddressU {
         InetSocketAddress inetSocketAddress2 = (InetSocketAddress) socket2.getLocalSocketAddress();
         System.out.println("本地IP:" + inetSocketAddress2.getAddress().getLocalHost().getHostAddress());
         System.out.println("本地端口:" + inetSocketAddress2.getPort());
+        long i = 0l;
+        System.out.println("" + i);
     }
 }

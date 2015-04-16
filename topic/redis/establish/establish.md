@@ -53,36 +53,6 @@
 
 ##### zk数据
 
-    [zk: webzk1.d.xiaonei.com:2181,webzk2.d.xiaonei.com:2181,webzk3.d.xiaonei.com:2181,webzk4.d.xiaonei.com:2181,webzk5.d.xiaonei.com:2181(CONNECTED) 21] ls /redis-ha/finance.cache/0/10.4.35.94:63790
-    [93408616136465128-0000000000, 309365719473195892-0000000001]
-    [zk: webzk1.d.xiaonei.com:2181,webzk2.d.xiaonei.com:2181,webzk3.d.xiaonei.com:2181,webzk4.d.xiaonei.com:2181,webzk5.d.xiaonei.com:2181(CONNECTED) 22] get /redis-ha/finance.cache/0/10.4.35.94:63790/93408616136465128-0000000000
-    10.4.35.94:53790
-    cZxid = 0x3252f78554
-    ctime = Mon Mar 23 17:12:47 CST 2015
-    mZxid = 0x3252f78554
-    mtime = Mon Mar 23 17:12:47 CST 2015
-    pZxid = 0x3252f78554
-    cversion = 0
-    dataVersion = 0
-    aclVersion = 0
-    ephemeralOwner = 0x14bdaa437c65ae8
-    dataLength = 16
-    numChildren = 0
-    [zk: webzk1.d.xiaonei.com:2181,webzk2.d.xiaonei.com:2181,webzk3.d.xiaonei.com:2181,webzk4.d.xiaonei.com:2181,webzk5.d.xiaonei.com:2181(CONNECTED) 23] get /redis-ha/finance.cache/0/10.4.35.94:63790/309365719473195892-0000000001
-    10.4.35.95:54790
-    cZxid = 0x3252f78599
-    ctime = Mon Mar 23 17:12:47 CST 2015
-    mZxid = 0x3252f78599
-    mtime = Mon Mar 23 17:12:47 CST 2015
-    pZxid = 0x3252f78599
-    cversion = 0
-    dataVersion = 0
-    aclVersion = 0
-    ephemeralOwner = 0x44b167b96e20b74
-    dataLength = 16
-    numChildren = 0
-    [zk: webzk1.d.xiaonei.com:2181,webzk2.d.xiaonei.com:2181,webzk3.d.xiaonei.com:2181,webzk4.d.xiaonei.com:2181,webzk5.d.xiaonei.com:2181(CONNECTED) 24] ls /redis-ha/finance.cache/0/10.4.35.94:63794
-    Node does not exist: /redis-ha/finance.cache/0/10.4.35.94:63794
     [zk: webzk1.d.xiaonei.com:2181,webzk2.d.xiaonei.com:2181,webzk3.d.xiaonei.com:2181,webzk4.d.xiaonei.com:2181,webzk5.d.xiaonei.com:2181(CONNECTED) 25] ls /redis-ha/finance.cache/4/10.4.35.94:63794
     [381423313516962814-0000000000, 309365719473195894-0000000001]
     [zk: webzk1.d.xiaonei.com:2181,webzk2.d.xiaonei.com:2181,webzk3.d.xiaonei.com:2181,webzk4.d.xiaonei.com:2181,webzk5.d.xiaonei.com:2181(CONNECTED) 26] get /redis-ha/finance.cache/4/10.4.35.94:63794/381423313516962814-0000000000

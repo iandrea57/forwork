@@ -10,7 +10,7 @@ public class Sunday {
         int textLength = text.length;
         int findLength = find.length;
         int i = 0;
-        while (i <= textLength - find.length) {
+        while (i <= textLength - findLength) {
             int j = 0;
             while (j < findLength && text[i + j] == find[j])
                 j++;
