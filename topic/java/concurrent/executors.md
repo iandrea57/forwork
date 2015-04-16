@@ -28,6 +28,9 @@ Executors类，提供了一系列工厂方法用于创先线程池，返回的�
     super(corePoolSize, Integer.MAX_VALUE, 
             0, TimeUnit.NANOSECONDS,
             new DelayedWorkQueue());
+            
+    private static final RejectedExecutionHandler defaultHandler =
+        new AbortPolicy();
 
 
 ##### ThreadPoolExecutor
