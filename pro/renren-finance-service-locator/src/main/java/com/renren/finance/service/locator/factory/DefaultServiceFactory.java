@@ -4,6 +4,10 @@
  */
 package com.renren.finance.service.locator.factory;
 
+import com.renren.finance.service.locator.util.ClassUtils;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -18,12 +22,12 @@ public class DefaultServiceFactory implements IServiceFactory {
     private ConcurrentMap<Class<?>, Object> serviceCache = new ConcurrentHashMap<Class<?>, Object>();
 
 
-
     @Override
     public <T> T getService(Class<T> serviceInterface) {
         return getService(serviceInterface, DEFAULT_TIME_OUT);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T> T getService(Class<T> serviceInterface, long timeout) {
         Object serviceInstance = serviceCache.get(serviceInterface);
@@ -34,14 +38,17 @@ public class DefaultServiceFactory implements IServiceFactory {
 
         try {
             ClassDefinition serviceDefinition = new ClassDefinition(serviceInterface);
-
-
-
+            InvocationHandler handler = createInvocationHandler(serviceDefinition, timeout);
+            T proxy = (T) Proxy.newProxyInstance(ClassUtils.getDefaultClassLoader(), new Class[] {serviceInterface}, handler);
+            Object temp = serviceCache.putIfAbsent(serviceInterface, proxy);
+            if (temp != null) return (T) temp;
+            return proxy;
         } catch (Exception e) {
-
+            throw new RuntimeException(e);
         }
+    }
 
-
-        return null;
+    private InvocationHandler createInvocationHandler(ClassDefinition serviceDefinition, long timeout) {
+        return new ServiceInvocationHandler(serviceDefinition, timeout);
     }
 }

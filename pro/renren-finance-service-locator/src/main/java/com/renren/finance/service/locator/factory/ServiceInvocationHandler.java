@@ -38,6 +38,28 @@ public class ServiceInvocationHandler implements InvocationHandler {
 
         String serviceId = serviceDefinition.getServiceId();
 
+        ServiceRouter serviceRouter = new CommonServiceRouter();
+        FinanceTransport transport = null;
+        try {
+            transport = serviceRouter.routeService(serviceId, timeout);
+        } catch (Exception e) {
+            throw new Exception("failed to route " + serviceId, e);
+        }
+        if (transport == null) {
+            throw new Exception("No transport avalible for " + serviceId);
+        }
+
+        Object result = null;
+        try {
+            TProtocol protocol = new TBinaryProtocol(transport.getTransport());
+            Object client = serviceDefinition.getServiceClientConstructor().newInstance(protocol);
+            result = getRealMethod(method).getMethod().invoke(client, args);
+            return result;
+        } catch (Exception e) {
+            throw new Exception(e);
+        } finally {
+            serviceRouter.returnConn(transport);
+        }
 
     }
 

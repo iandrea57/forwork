@@ -12,15 +12,15 @@ public class CommonServiceRouter implements ServiceRouter {
 
     private static CommonServiceRouter instance = new CommonServiceRouter();
 
+    private TTransportProvider connectionProvider = new TTransportProvider();
 
     @Override
-    public FinanceTransport routeService(String serviceId, String shardBy,
-            int timeout) throws Exception {
+    public FinanceTransport routeService(String serviceId, long timeout) throws Exception {
         if (!isValidServiceId(serviceId)) {
             throw new IllegalArgumentException("serviceId invalid!");
         }
 
-        return null;
+        TTransport transport = connectionProvider.getConnection();
     }
 
     private boolean isValidServiceId(String serviceId) {
@@ -32,6 +32,7 @@ public class CommonServiceRouter implements ServiceRouter {
 
     @Override
     public void returnConn(FinanceTransport financeTransport) throws Exception {
+        connectionProvider.returnConnection(financeTransport);
     }
 
     @Override

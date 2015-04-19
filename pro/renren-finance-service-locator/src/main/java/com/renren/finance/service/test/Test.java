@@ -31,7 +31,6 @@ public class Test {
         print(resolveClientClassName(class1));
 
 
-
         // com.renren.xoa2.client.ServiceFactory;
     }
     private static String resolveClientClassName(Class<?> serviceInterface) {
