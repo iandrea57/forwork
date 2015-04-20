@@ -3,6 +3,9 @@ package com.renren.finance.service.locator.factory;
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
+import org.apache.thrift.transport.TTransport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.NoSuchElementException;
 
@@ -11,7 +14,7 @@ import java.util.NoSuchElementException;
  */
 public class TTransportProvider {
 
-    private Logger logger = LoggerFactory.getLogger(TTransportConnectionProvider.class);
+    private Logger logger = LoggerFactory.getLogger(TTransportProvider.class);
 
     private static int maxTotle = 200;
 
@@ -70,7 +73,7 @@ public class TTransportProvider {
         return message.toString();
     }
 
-    public TTransport getConnection(Node node, long conTimeOut) {
+    public TTransport getConnection(Node node, long conTimeOut) throws Exception {
         KeyedObjectPool<String, TTransport> keyedObjectPool = getKeyedObjectPool();
         String key = ThriftPoolableObjectFactory.getKey(node.getHost(), node.getPort(), conTimeOut);
         TTransport transport = null;
@@ -78,10 +81,13 @@ public class TTransportProvider {
             transport = keyedObjectPool.borrowObject(key);
         } catch (NoSuchElementException e) {
             e.printStackTrace();
+            throw e;
         } catch (IllegalStateException e) {
             e.printStackTrace();
+            throw e;
         } catch (Exception e) {
             e.printStackTrace();
+            throw e;
         }
 
         if (logger.isDebugEnabled()) {
@@ -91,30 +97,30 @@ public class TTransportProvider {
         return transport;
     }
 
-    public void returnConnection(FinanceTransport financeTransport) {
-        String key = ThriftPoolableObjectFactory.getKey(financeTransport.getNode().getHost(), financeTransport.getNode().getPort(), financeTransport.getTimeout());
-        if (financeTransport.getTransport() != null) {
+    public void returnConnection(Node node, long conTimeOut, TTransport transport) {
+        String key = ThriftPoolableObjectFactory.getKey(node.getHost(), node.getPort(), conTimeOut);
+        if (transport != null) {
             try {
-                getKeyedObjectPool().returnObject(key, financeTransport.getTransport());
+                getKeyedObjectPool().returnObject(key, transport);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public void invalidConnection(FinanceTransport financeTransport) {
-        String key = ThriftPoolableObjectFactory.getKey(financeTransport.getNode().getHost(), financeTransport.getNode().getPort(), financeTransport.getTimeout());
-        if (financeTransport.getTransport() != null) {
+    public void invalidConnection(Node node, long conTimeOut, TTransport transport) {
+        String key = ThriftPoolableObjectFactory.getKey(node.getHost(), node.getPort(), conTimeOut);
+        if (transport != null) {
             try {
-                getKeyedObjectPool().invalidateObject(key, financeTransport.getTransport());
+                getKeyedObjectPool().invalidateObject(key, transport);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public void clearConnection(FinanceTransport financeTransport) {
-        String key = ThriftPoolableObjectFactory.getKey(financeTransport.getNode().getHost(), financeTransport.getNode().getPort(), financeTransport.getTimeout());
+    public void clearConnection(Node node, long conTimeOut) {
+        String key = ThriftPoolableObjectFactory.getKey(node.getHost(), node.getPort(), conTimeOut);
         try {
             getKeyedObjectPool().clear(key);
         } catch (UnsupportedOperationException e) {
@@ -122,9 +128,7 @@ public class TTransportProvider {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
-
 
     public static boolean isTestOnBorrow() {
         return testOnBorrow;

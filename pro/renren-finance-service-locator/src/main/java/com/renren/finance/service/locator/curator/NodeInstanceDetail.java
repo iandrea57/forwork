@@ -4,11 +4,13 @@
  */
 package com.renren.finance.service.locator.curator;
 
+import java.util.List;
+
 /**
  * @author <a href="mailto:hailong.peng@renren-inc.com">彭海龙</a>
  * @createTime 15-4-7 下午3:59
  */
-public class InstanceDetail {
+public class NodeInstanceDetail {
 
     private String id;
 
@@ -18,14 +20,17 @@ public class InstanceDetail {
 
     private String interfaceName;
 
-    public InstanceDetail(String id, String ip, int port, String interfaceName) {
+    private List<String> alarmPhones;
+
+    public NodeInstanceDetail(String id, String ip, int port, String interfaceName, List<String> alarmPhones) {
         this.id = id;
         this.ip = ip;
         this.port = port;
         this.interfaceName = interfaceName;
+        this.alarmPhones = alarmPhones;
     }
 
-    public InstanceDetail() {}
+    public NodeInstanceDetail() {}
 
     public String getId() {
         return id;
@@ -69,4 +74,11 @@ public class InstanceDetail {
         this.interfaceName = interfaceName;
     }
 
+    public List<String> getAlarmPhones() {
+        return alarmPhones;
+    }
+
+    public void setAlarmPhones(List<String> alarmPhones) {
+        this.alarmPhones = alarmPhones;
+    }
 }

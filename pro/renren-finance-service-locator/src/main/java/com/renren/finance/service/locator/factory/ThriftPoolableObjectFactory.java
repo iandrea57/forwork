@@ -3,6 +3,11 @@ package com.renren.finance.service.locator.factory;
 import org.apache.commons.pool2.BaseKeyedPooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
+import org.apache.thrift.transport.TFramedTransport;
+import org.apache.thrift.transport.TSocket;
+import org.apache.thrift.transport.TTransport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by dra on 15-4-19.
@@ -23,8 +28,8 @@ public class ThriftPoolableObjectFactory extends BaseKeyedPooledObjectFactory<St
         return Integer.parseInt(key.split(":")[1]);
     }
 
-    private static long getTimeout(String key) {
-        return Long.parseLong(key.split(":")[2]);
+    private static int getTimeout(String key) {
+        return Integer.parseInt(key.split(":")[2]);
     }
 
     @Override

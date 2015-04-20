@@ -16,7 +16,7 @@ public class FinanceTransport {
 
     private Node node;
 
-    private long timeout;
+    private int timeout;
 
     private boolean disabled = false;
 
@@ -44,11 +44,11 @@ public class FinanceTransport {
         this.disabled = disabled;
     }
 
-    public long getTimeout() {
+    public int getTimeout() {
         return timeout;
     }
 
-    public void setTimeout(long timeout) {
+    public void setTimeout(int timeout) {
         this.timeout = timeout;
     }
 }

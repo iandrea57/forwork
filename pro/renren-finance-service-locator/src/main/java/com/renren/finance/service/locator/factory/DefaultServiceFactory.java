@@ -17,10 +17,9 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class DefaultServiceFactory implements IServiceFactory {
 
-    private static final long DEFAULT_TIME_OUT = 300L;
+    private static final int DEFAULT_TIME_OUT = 300;
 
     private ConcurrentMap<Class<?>, Object> serviceCache = new ConcurrentHashMap<Class<?>, Object>();
-
 
     @Override
     public <T> T getService(Class<T> serviceInterface) {
@@ -29,7 +28,7 @@ public class DefaultServiceFactory implements IServiceFactory {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> T getService(Class<T> serviceInterface, long timeout) {
+    public <T> T getService(Class<T> serviceInterface, int timeout) {
         Object serviceInstance = serviceCache.get(serviceInterface);
 
         if (serviceInstance != null) {
@@ -48,7 +47,7 @@ public class DefaultServiceFactory implements IServiceFactory {
         }
     }
 
-    private InvocationHandler createInvocationHandler(ClassDefinition serviceDefinition, long timeout) {
+    private InvocationHandler createInvocationHandler(ClassDefinition serviceDefinition, int timeout) {
         return new ServiceInvocationHandler(serviceDefinition, timeout);
     }
 }

@@ -8,6 +8,6 @@ public interface IServiceFactory {
 
     public <T> T getService(Class<T> serviceInterface);
 
-    public <T> T getService(Class<T> serviceInterface, long timeout);
+    public <T> T getService(Class<T> serviceInterface, int timeout);
 
 }

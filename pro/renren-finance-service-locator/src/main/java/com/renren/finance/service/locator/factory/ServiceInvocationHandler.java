@@ -4,10 +4,14 @@
  */
 package com.renren.finance.service.locator.factory;
 
+import org.apache.thrift.TBase;
+import org.apache.thrift.protocol.TBinaryProtocol;
+import org.apache.thrift.protocol.TProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -19,48 +23,58 @@ import java.util.concurrent.ConcurrentMap;
 public class ServiceInvocationHandler implements InvocationHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(ServiceInvocationHandler.class);
+    private static final int MAX_RETRY = 1;
     private ClassDefinition serviceDefinition;
-    private long timeout;
+    private ServiceRouter serviceRouter;
+    private int timeout;
     private ConcurrentMap<Method, MethodDefinition> methodCache = new ConcurrentHashMap<Method, MethodDefinition>();
 
-    public ServiceInvocationHandler(ClassDefinition serviceDefinition, long timeout) {
-        if (serviceDefinition == null) {
+    public ServiceInvocationHandler(ClassDefinition serviceDefinition, int timeout) {
+        this(CommonServiceRouter.getInstance(), serviceDefinition, timeout);
+    }
+
+    public ServiceInvocationHandler(ServiceRouter serviceRouter, ClassDefinition serviceDefinition, int timeout) {
+        if (serviceRouter == null || serviceDefinition == null) {
             throw new NullPointerException();
         }
+        this.serviceRouter = serviceRouter;
         this.serviceDefinition = serviceDefinition;
         this.timeout = timeout;
     }
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        MethodDefinition methodDefinition = null;
-        methodDefinition = getRealMethod(method);
-
         String serviceId = serviceDefinition.getServiceId();
 
-        ServiceRouter serviceRouter = new CommonServiceRouter();
-        FinanceTransport transport = null;
+        FinanceTransport financeTransport = null;
+        int retry = 0;
         try {
-            transport = serviceRouter.routeService(serviceId, timeout);
+            while (true) {
+                financeTransport = serviceRouter.routeService(serviceId, timeout);
+                if (financeTransport != null) {
+                    break;
+                }
+                if (++retry >= MAX_RETRY) {
+                    logger.error(serviceId + " get financeTransport failed.");
+                    return null;
+                }
+            }
+            TProtocol protocol = new TBinaryProtocol(financeTransport.getTransport());
+            Object client = serviceDefinition.getServiceClientConstructor().newInstance(protocol);
+            Object result = getRealMethod(method).getMethod().invoke(client, args);
+            serviceRouter.returnConn(financeTransport);
+            return result;
+        } catch (InvocationTargetException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof TBase) {
+                serviceRouter.returnConn(financeTransport);
+                logger.error("Thrift service return exception");
+            }
+            throw cause;
         } catch (Exception e) {
+            serviceRouter.serviceException(serviceId, e, financeTransport);
             throw new Exception("failed to route " + serviceId, e);
         }
-        if (transport == null) {
-            throw new Exception("No transport avalible for " + serviceId);
-        }
-
-        Object result = null;
-        try {
-            TProtocol protocol = new TBinaryProtocol(transport.getTransport());
-            Object client = serviceDefinition.getServiceClientConstructor().newInstance(protocol);
-            result = getRealMethod(method).getMethod().invoke(client, args);
-            return result;
-        } catch (Exception e) {
-            throw new Exception(e);
-        } finally {
-            serviceRouter.returnConn(transport);
-        }
-
     }
 
     private MethodDefinition getRealMethod(Method method) throws NoSuchMethodException {

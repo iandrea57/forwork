@@ -6,11 +6,10 @@ package com.renren.finance.service.locator.factory;
  */
 public interface ServiceRouter {
 
-    public FinanceTransport routeService(String serviceId, long timeout) throws Exception;
+    public FinanceTransport routeService(String serviceId, int timeout) throws Exception;
 
     public void returnConn(FinanceTransport financeTransport) throws Exception;
 
     public void serviceException(String serviceId, Throwable e, FinanceTransport financeTransport);
 
-    public void setTimeout(long timeout);
 }

@@ -10,7 +10,9 @@ package com.renren.finance.service.locator.factory;
  */
 public class ServiceFactory implements IServiceFactory {
 
-    private static final long DEFAULT_TIME_OUT = 300L;
+    private static final int DEFAULT_TIME_OUT = 300;
+
+    private static IServiceFactory factory = new DefaultServiceFactory();
 
     @Override
     public <T> T getService(Class<T> serviceInterface) {
@@ -18,7 +20,7 @@ public class ServiceFactory implements IServiceFactory {
     }
 
     @Override
-    public <T> T getService(Class<T> serviceInterface, long timeout) {
-        return null;
+    public <T> T getService(Class<T> serviceInterface, int timeout) {
+        return factory.getService(serviceInterface, timeout);
     }
 }
