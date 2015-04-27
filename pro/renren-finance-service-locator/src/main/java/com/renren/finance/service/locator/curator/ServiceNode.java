@@ -21,7 +21,7 @@ public class ServiceNode implements Node {
 
     @Override
     public String getHost() {
-        return null;
+        return host;
     }
 
     @Override

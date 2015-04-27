@@ -8,19 +8,17 @@ package com.renren.finance.service.locator.factory;
  * @author <a href="mailto:hailong.peng@renren-inc.com">彭海龙</a>
  * @createTime 15-4-14 下午5:20
  */
-public class ServiceFactory implements IServiceFactory {
+public class ServiceFactory {
 
     private static final int DEFAULT_TIME_OUT = 300;
 
     private static IServiceFactory factory = new DefaultServiceFactory();
 
-    @Override
-    public <T> T getService(Class<T> serviceInterface) {
+    public static <T> T getService(Class<T> serviceInterface) {
         return getService(serviceInterface, DEFAULT_TIME_OUT);
     }
 
-    @Override
-    public <T> T getService(Class<T> serviceInterface, int timeout) {
+    public static <T> T getService(Class<T> serviceInterface, int timeout) {
         return factory.getService(serviceInterface, timeout);
     }
 }

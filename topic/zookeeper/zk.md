@@ -3,6 +3,10 @@
 ##### zkCli.sh
     sh zkCli.sh -server 10.4.30.143:2181,10.4.30.144:2181,10.4.30.144:2183
 
+##### zkServer.sh
+    sh zkServer.sh [start|stop|status|restart] ../conf/zoo.cfg
+
+
 ##### connectString
     host(:port)?(,host(:port)?)*(/rootpath)?
 

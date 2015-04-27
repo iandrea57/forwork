@@ -26,7 +26,7 @@ public class ClientApp {
                 .build();
         client.start();
 
-        String myPath = "/service/lbs/search";
+        String myPath = "/finance/service";
         ServiceDiscoverer discoverer = new ServiceDiscoverer(client, myPath);
 
         for (int i = 0; i < 10; i++) {

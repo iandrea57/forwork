@@ -5,10 +5,12 @@
 package com.mmz.frameworkuse.thrift;
 
 import com.mmz.xt.service.api.InfoService;
+import com.renren.finance.service.locator.annotation.FinanceService;
 
 /**
  * @author <a href="mailto:hailong.peng@renren-inc.com">彭海龙</a>
  * @createTime 15-4-10 下午12:09
  */
+@FinanceService("infoservice")
 public interface IInfoService extends InfoService.Iface {
 }

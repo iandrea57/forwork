@@ -50,10 +50,10 @@ public class ServerApp {
         alarm.add("13699441057");
 
         ServiceInstance<NodeInstanceDetail> instance1 = ServiceInstance.<NodeInstanceDetail>builder()
-                .name("service1")
+                .name("infoservice")
                 .port(9813)
                 .address("127.0.0.1")   //address不写的话,会取本地ip
-                .payload(new NodeInstanceDetail(UUID.randomUUID().toString(),"192.168.1.100",12345,"Test.Service1", alarm))
+                .payload(new NodeInstanceDetail(UUID.randomUUID().toString(),"192.168.1.100",12345,"Test.infoservice", alarm))
                 .uriSpec(new UriSpec("{scheme}://{address}:{port}"))
                 .build();
         registrar.register(instance1);

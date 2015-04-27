@@ -26,6 +26,7 @@ public class InfoServiceImpl implements IInfoService {
         info.setMoney(133.3);
         info.setType(Type.SUCCESS);
         response.setInfo(info);
+        System.out.println("call getInfo");
         return response;
     }
 }
