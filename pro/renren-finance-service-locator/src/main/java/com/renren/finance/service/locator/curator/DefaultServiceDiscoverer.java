@@ -29,10 +29,10 @@ public class DefaultServiceDiscoverer implements IServiceDiscoverer {
 
     private static final Logger logger = LoggerFactory.getLogger(DefaultServiceDiscoverer.class);
 
-    private ServiceDiscovery<NodeInstanceDetail> serviceDiscovery;
+    protected static final String SERVICE_HOME_PATH = "/finance/service";
+    protected static final String ZK_CONNECT_STRING = "10.3.24.123:12181";
 
-    private static final String SERVICE_HOME_PATH = "/finance/service";
-    private static final String ZK_CONNECT_STRING = "10.3.24.123:12181";
+    private ServiceDiscovery<NodeInstanceDetail> serviceDiscovery;
 
     private Map<String, ServiceProvider<NodeInstanceDetail>> providerMap = new ConcurrentHashMap<String, ServiceProvider<NodeInstanceDetail>>();
 
