@@ -4,7 +4,6 @@
  */
 package com.renren.finance.service.locator.register;
 
-import com.mmz.xt.service.api.InfoService;
 import com.renren.finance.service.locator.annotation.FinanceService;
 
 import java.lang.reflect.Constructor;
@@ -24,7 +23,7 @@ public class ServerDefinition {
     public ServerDefinition(Class<?> serviceInterface) throws ClassNotFoundException, NoSuchMethodException {
         this.serviceProcessorClass = Class.forName(resolveProcessorClassName(serviceInterface));
         this.serviceId = resolveServiceId(serviceInterface);
-        this.serviceProcessorConstructor = serviceProcessorClass.getConstructor(InfoService.Iface.class);
+        this.serviceProcessorConstructor = serviceProcessorClass.getConstructor(getIfaceClass(serviceInterface));
     }
 
     private String resolveServiceId(Class<?> serviceInterface) {
@@ -33,7 +32,7 @@ public class ServerDefinition {
     }
 
     private String resolveProcessorClassName(Class<?> serviceInterface) {
-        Class<?> ifaceClass = (Class<?>)serviceInterface.getGenericInterfaces()[0];
+        Class<?> ifaceClass = getIfaceClass(serviceInterface);
         String processorClassName = null;
         if (ifaceClass != null) {
             String ifaceClassName = ifaceClass.getName();
@@ -43,6 +42,10 @@ public class ServerDefinition {
             }
         }
         return processorClassName;
+    }
+
+    private Class<?> getIfaceClass(Class<?> serviceInterface) {
+        return (Class<?>)serviceInterface.getGenericInterfaces()[0];
     }
 
     public String getServiceId() {

@@ -1,4 +1,4 @@
-package com.renren.finance.service.locator.curator;
+package com.renren.finance.service.locator.discoverer;
 
 import com.renren.finance.service.locator.factory.Node;
 

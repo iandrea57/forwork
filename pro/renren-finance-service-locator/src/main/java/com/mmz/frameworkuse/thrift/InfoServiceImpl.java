@@ -4,10 +4,11 @@
  */
 package com.mmz.frameworkuse.thrift;
 
-import com.mmz.xt.service.api.GetInfoRequest;
-import com.mmz.xt.service.api.GetInfoResponse;
-import com.mmz.xt.service.api.model.Info;
-import com.mmz.xt.service.api.model.Type;
+import com.mmz.service.api.GetInfoRequest;
+import com.mmz.service.api.GetInfoResponse;
+import com.mmz.service.api.model.Info;
+import com.mmz.service.api.model.Type;
+import com.renren.finance.service.locator.util.IpUtils;
 import org.apache.thrift.TException;
 
 /**
@@ -26,7 +27,7 @@ public class InfoServiceImpl implements IInfoService {
         info.setMoney(133.3);
         info.setType(Type.SUCCESS);
         response.setInfo(info);
-        System.out.println("call getInfo");
+        System.out.println("call getInfo: " + IpUtils.getOneLocalIp());
         return response;
     }
 }

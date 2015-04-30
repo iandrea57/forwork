@@ -2,9 +2,10 @@
  * $Id$
  * Copyright 2011-2013 Oak Pacific Interactive. All rights reserved.
  */
-package com.renren.finance.service.locator.curator;
+package com.renren.finance.service.locator.registrar;
 
-import com.renren.finance.service.locator.factory.Node;
+import com.renren.finance.service.locator.conf.LocatorConf;
+import com.renren.finance.service.locator.curator.NodeInstanceDetail;
 import com.renren.finance.service.locator.register.RegisterInfo;
 import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
@@ -27,9 +28,6 @@ public class DefaultServiceRegistrar implements IServiceRegistrar {
 
     private static final Logger logger = LoggerFactory.getLogger(DefaultServiceRegistrar.class);
 
-    protected static final String SERVICE_HOME_PATH = "/finance/service";
-    protected static final String ZK_CONNECT_STRING = "10.3.24.123:12181";
-
     private ServiceDiscovery<NodeInstanceDetail> serviceDiscovery;
 
     private static class RegistrarHolder {
@@ -37,16 +35,18 @@ public class DefaultServiceRegistrar implements IServiceRegistrar {
         private static final DefaultServiceRegistrar instance = getRegistrar();
 
         private static DefaultServiceRegistrar getRegistrar() {
+            LocatorConf conf = LocatorConf.instance();
+
             RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 3);
             CuratorFramework client = CuratorFrameworkFactory.builder()
-                    .connectString(ZK_CONNECT_STRING)
+                    .connectString(conf.getCluster())
                     .retryPolicy(retryPolicy)
                     .build();
             client.start();
 
             DefaultServiceRegistrar discoverer = null;
             try {
-                discoverer = new DefaultServiceRegistrar(client, SERVICE_HOME_PATH);
+                discoverer = new DefaultServiceRegistrar(client, conf.getBasePath());
             } catch (Exception e) {
                 e.printStackTrace();
                 logger.error("DefaultServiceDiscoverer.DiscovererHolder.getDiscoverer", e);

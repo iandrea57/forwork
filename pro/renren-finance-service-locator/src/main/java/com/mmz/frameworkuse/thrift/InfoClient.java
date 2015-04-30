@@ -4,9 +4,9 @@
  */
 package com.mmz.frameworkuse.thrift;
 
-import com.mmz.xt.service.api.GetInfoRequest;
-import com.mmz.xt.service.api.GetInfoResponse;
-import com.mmz.xt.service.api.InfoService;
+import com.mmz.service.api.GetInfoRequest;
+import com.mmz.service.api.GetInfoResponse;
+import com.mmz.service.api.InfoService;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TProtocol;

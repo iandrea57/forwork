@@ -4,12 +4,14 @@
  * DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
  *  @generated
  */
-package com.mmz.xt.service.api.model;
+package com.mmz.service.api.model;
 
 
+import java.util.Map;
+import java.util.HashMap;
 import org.apache.thrift.TEnum;
 
-public enum Type implements TEnum {
+public enum Type implements org.apache.thrift.TEnum {
   ALL(0),
   SUCCESS(1),
   FAILED(2);
@@ -31,7 +33,7 @@ public enum Type implements TEnum {
    * Find a the enum type by its integer value, as defined in the Thrift IDL.
    * @return null if the value is not found.
    */
-  public static Type findByValue(int value) {
+  public static Type findByValue(int value) { 
     switch (value) {
       case 0:
         return ALL;

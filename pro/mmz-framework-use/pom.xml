@@ -29,6 +29,11 @@
             <artifactId>libthrift</artifactId>
             <version>0.9.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.zookeeper</groupId>
+            <artifactId>zookeeper</artifactId>
+            <version>3.4.6</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -113,13 +118,13 @@
                     </compilerArguments>
                 </configuration>
             </plugin>
-            <!--<plugin>
+            <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
-                &lt;!&ndash;<configuration>
+                <!--<configuration>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
-                </configuration>&ndash;&gt;
+                </configuration>-->
                 <configuration>
                     <appendAssemblyId>false</appendAssemblyId>
                     <descriptors>
@@ -135,7 +140,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>-->
+            </plugin>
         </plugins>
     </build>
 

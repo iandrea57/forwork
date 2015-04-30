@@ -5,17 +5,9 @@
 package com.renren.finance.service.locator.curator;
 
 import com.mmz.frameworkuse.thrift.IInfoService;
-import com.mmz.xt.service.api.GetInfoRequest;
-import com.mmz.xt.service.api.GetInfoResponse;
+import com.mmz.service.api.GetInfoRequest;
+import com.mmz.service.api.GetInfoResponse;
 import com.renren.finance.service.locator.factory.ServiceFactory;
-import com.renren.finance.service.test.InstanceDetail;
-import com.renren.finance.service.test.ServiceDiscoverer;
-import org.apache.curator.RetryPolicy;
-import org.apache.curator.framework.CuratorFramework;
-import org.apache.curator.framework.CuratorFrameworkFactory;
-import org.apache.curator.retry.ExponentialBackoffRetry;
-import org.apache.curator.utils.CloseableUtils;
-import org.apache.curator.x.discovery.ServiceInstance;
 
 /**
  * @author <a href="mailto:hailong.peng@renren-inc.com">彭海龙</a>

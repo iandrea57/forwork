@@ -4,7 +4,7 @@
  */
 package com.mmz.frameworkuse.thrift;
 
-import com.mmz.xt.service.api.InfoService;
+import com.mmz.service.api.InfoService;
 import com.renren.finance.service.locator.annotation.FinanceService;
 
 /**

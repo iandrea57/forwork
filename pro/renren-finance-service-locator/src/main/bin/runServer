@@ -1,0 +1,33 @@
+#!/bin/sh
+
+PRG=$0
+while [ -h "$PRG" ]; do
+  ls=`ls -ld "$PRG"`
+  link=`expr "$ls" : '.*-> \(.*\)$'`
+  if expr "$link" : '/.*' > /dev/null; then
+    PRG="$link"
+  else
+    PRG=`dirname "$PRG"`/"$link"
+  fi
+done
+PRGDIR=`dirname "$PRG"`
+SERDIR=`cd "$PRGDIR/.." > /dev/null; pwd`
+
+cd "$SERDIR"
+
+
+APP_NAME_OPTS="-Dapp.name=SERVICE-DEMO"
+JAVA_OPTS="-server -Xms128M -Xmx128M -Dfile.encoding=utf-8"
+DEBUG_OPTS="-Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=11008 -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=13008 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false"
+CLASS_PATH="$SERDIR/classes:$SERDIR/lib/*"
+
+eval java \
+$APP_NAME_OPTS \
+$JAVA_OPTS \
+$DEBUG_OPTS \
+-cp $CLASS_PATH \
+com.renren.finance.service.locator.curator.ServerApp \
+>> stdout.log 2>&1 "&"
+
+echo $! > server.pid
+

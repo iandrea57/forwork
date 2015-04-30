@@ -2,8 +2,11 @@
  * $Id$
  * Copyright 2011-2013 Oak Pacific Interactive. All rights reserved.
  */
-package com.renren.finance.service.locator.curator;
+package com.renren.finance.service.locator.discoverer;
 
+import com.renren.finance.service.locator.conf.LocatorConf;
+import com.renren.finance.service.locator.curator.NodeInstanceDetail;
+import com.renren.finance.service.locator.curator.ServiceNode;
 import com.renren.finance.service.locator.factory.Node;
 import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
@@ -29,9 +32,6 @@ public class DefaultServiceDiscoverer implements IServiceDiscoverer {
 
     private static final Logger logger = LoggerFactory.getLogger(DefaultServiceDiscoverer.class);
 
-    protected static final String SERVICE_HOME_PATH = "/finance/service";
-    protected static final String ZK_CONNECT_STRING = "10.3.24.123:12181";
-
     private ServiceDiscovery<NodeInstanceDetail> serviceDiscovery;
 
     private Map<String, ServiceProvider<NodeInstanceDetail>> providerMap = new ConcurrentHashMap<String, ServiceProvider<NodeInstanceDetail>>();
@@ -41,16 +41,18 @@ public class DefaultServiceDiscoverer implements IServiceDiscoverer {
         private static final DefaultServiceDiscoverer instance = getDiscoverer();
 
         private static DefaultServiceDiscoverer getDiscoverer() {
+            LocatorConf conf = LocatorConf.instance();
+
             RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 3);
             CuratorFramework client = CuratorFrameworkFactory.builder()
-                    .connectString(ZK_CONNECT_STRING)
+                    .connectString(conf.getCluster())
                     .retryPolicy(retryPolicy)
                     .build();
             client.start();
 
             DefaultServiceDiscoverer discoverer = null;
             try {
-                discoverer = new DefaultServiceDiscoverer(client, SERVICE_HOME_PATH);
+                discoverer = new DefaultServiceDiscoverer(client, conf.getBasePath());
             } catch (Exception e) {
                 e.printStackTrace();
                 logger.error("DefaultServiceDiscoverer.DiscovererHolder.getDiscoverer", e);

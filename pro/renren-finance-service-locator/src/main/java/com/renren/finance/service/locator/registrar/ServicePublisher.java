@@ -2,11 +2,10 @@
  * $Id$
  * Copyright 2011-2013 Oak Pacific Interactive. All rights reserved.
  */
-package com.renren.finance.service.locator.register;
+package com.renren.finance.service.locator.registrar;
 
-import com.renren.finance.service.locator.curator.DefaultServiceRegistrar;
-import com.renren.finance.service.locator.curator.IServiceRegistrar;
-import com.renren.finance.service.locator.factory.ClassDefinition;
+import com.renren.finance.service.locator.register.RegisterInfo;
+import com.renren.finance.service.locator.register.ServerDefinition;
 import org.apache.thrift.TProcessor;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.server.TServer;
@@ -19,20 +18,20 @@ import java.net.InetSocketAddress;
 
 /**
  * @author <a href="mailto:hailong.peng@renren-inc.com">彭海龙</a>
- * @createTime 15-4-28 下午5:20
+ * @createTime 15-4-30 下午4:59
  */
-public class RegisterFactory {
+public class ServicePublisher {
 
     private static IServiceRegistrar serviceRegistrar = DefaultServiceRegistrar.getInstance();
 
-    public static <T> void regist(Class<T> serviceInterface, T serviceImpl, RegisterInfo info) {
+    public static <T> void publish(Class<T> serviceInterface, T serviceImpl, RegisterInfo info) {
         try {
             ServerDefinition serverDefinition = new ServerDefinition(serviceInterface);
             String serviceId = serverDefinition.getServiceId();
             serviceRegistrar.register(serviceId, info);
 
             Object processor = serverDefinition.getServiceProcessorConstructor().newInstance(serviceImpl);
-            TServerTransport serverTransport = new TServerSocket(new InetSocketAddress("0.0.0.0", info.getNode().getPort()));
+            TServerTransport serverTransport = new TServerSocket(info.getNode().getPort());
             TThreadPoolServer.Args trArgs = new TThreadPoolServer.Args(serverTransport);
             trArgs.processor((TProcessor) processor);
             trArgs.protocolFactory(new TBinaryProtocol.Factory(true, true));

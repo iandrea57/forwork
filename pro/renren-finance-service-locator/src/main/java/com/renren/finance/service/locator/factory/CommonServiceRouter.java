@@ -4,8 +4,8 @@
  */
 package com.renren.finance.service.locator.factory;
 
-import com.renren.finance.service.locator.curator.DefaultServiceDiscoverer;
-import com.renren.finance.service.locator.curator.IServiceDiscoverer;
+import com.renren.finance.service.locator.discoverer.DefaultServiceDiscoverer;
+import com.renren.finance.service.locator.discoverer.IServiceDiscoverer;
 import org.apache.thrift.transport.TTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

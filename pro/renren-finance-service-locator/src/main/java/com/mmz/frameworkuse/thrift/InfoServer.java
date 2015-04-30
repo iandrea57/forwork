@@ -4,7 +4,7 @@
  */
 package com.mmz.frameworkuse.thrift;
 
-import com.mmz.xt.service.api.InfoService;
+import com.mmz.service.api.InfoService;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.server.TServer;
 import org.apache.thrift.server.TThreadPoolServer;
