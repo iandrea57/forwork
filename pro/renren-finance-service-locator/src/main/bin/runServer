@@ -26,7 +26,7 @@ $APP_NAME_OPTS \
 $JAVA_OPTS \
 $DEBUG_OPTS \
 -cp $CLASS_PATH \
-com.renren.finance.service.locator.curator.ServerApp \
+com.renren.finance.demo.ServerApp \
 >> stdout.log 2>&1 "&"
 
 echo $! > server.pid

@@ -10,9 +10,18 @@ import org.apache.thrift.TProcessor;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.server.TServer;
 import org.apache.thrift.server.TThreadPoolServer;
+import org.apache.thrift.server.TThreadedSelectorServer;
+import org.apache.thrift.transport.TFramedTransport;
+import org.apache.thrift.transport.TNonblockingServerSocket;
+import org.apache.thrift.transport.TNonblockingServerTransport;
 import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TServerTransport;
 import org.apache.thrift.transport.TTransportFactory;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author <a href="mailto:hailong.peng@renren-inc.com">彭海龙</a>
@@ -31,12 +40,16 @@ public class ServicePublisher {
             serviceRegistrar.register(serviceId, info);
 
             TProcessor processor = (TProcessor)serviceDefinition.getServiceProcessorConstructor().newInstance(serviceImpl);
-            TServerTransport serverTransport = new TServerSocket(info.getNode().getPort());
-            TThreadPoolServer.Args trArgs = new TThreadPoolServer.Args(serverTransport);
+            TServerTransport serverTransport = new TNonblockingServerSocket(info.getNode().getPort());
+            TThreadedSelectorServer.Args trArgs = new TThreadedSelectorServer.Args((TNonblockingServerTransport)serverTransport);
             trArgs.processor(processor);
             trArgs.protocolFactory(new TBinaryProtocol.Factory(true, true));
-            trArgs.transportFactory(new TTransportFactory());
-            TServer server = new TThreadPoolServer(trArgs);
+            trArgs.transportFactory(new TFramedTransport.Factory());
+            trArgs.executorService(createExecuteService(info.getCoreSize(), info.getMaxSize()));
+            if (info.getSelectorThreads() > 0) {
+                trArgs.selectorThreads(info.getSelectorThreads());
+            }
+            TServer server = new TThreadedSelectorServer(trArgs);
 
             ThriftServer service = new ThriftServer();
             service.settProcessor(processor);
@@ -46,10 +59,19 @@ public class ServicePublisher {
             Thread thread = new Thread(service, serviceId);
             thread.start();
 
-            serviceRegistrar.unregister(serviceId, info);
+//            serviceRegistrar.unregister(serviceId, info);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static ExecutorService createExecuteService(int coreSize, int maxSize) {
+        if (coreSize <= 0 || maxSize <= 0) {
+            coreSize = 2 * Runtime.getRuntime().availableProcessors();
+            maxSize = 2 * coreSize;
+        }
+        return new ThreadPoolExecutor(coreSize, maxSize, 60, TimeUnit.SECONDS,
+                new LinkedBlockingQueue<Runnable>(), new ServiceThreadFactory());
     }
 
 }

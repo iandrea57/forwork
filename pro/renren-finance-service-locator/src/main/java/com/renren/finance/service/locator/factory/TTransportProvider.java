@@ -1,6 +1,6 @@
 package com.renren.finance.service.locator.factory;
 
-import com.renren.finance.service.locator.curator.Node;
+import com.renren.finance.service.locator.model.Node;
 import org.apache.commons.pool2.KeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;

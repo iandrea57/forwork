@@ -40,8 +40,7 @@ public class ThriftPoolableObjectFactory extends BaseKeyedPooledObjectFactory<St
             socket.getSocket().setTcpNoDelay(true);
             socket.getSocket().setSoLinger(false, 0);
             socket.getSocket().setSoTimeout(getTimeout(key));
-//            TTransport transport = new TFramedTransport(socket);
-            TTransport transport = socket;
+            TTransport transport = new TFramedTransport(socket);
             transport.open();
             if (logger.isDebugEnabled()) {
                 logger.debug("client pool make object success.");

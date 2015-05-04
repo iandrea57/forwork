@@ -4,7 +4,7 @@
  */
 package com.renren.finance.service.locator.register;
 
-import com.renren.finance.service.locator.annotation.FinanceService;
+import com.renren.finance.service.locator.annotation.Locator;
 
 import java.lang.reflect.Constructor;
 
@@ -27,8 +27,8 @@ public class ServerClassDefinition {
     }
 
     private String resolveServiceId(Class<?> serviceInterface) {
-        FinanceService financeService = serviceInterface.getAnnotation(FinanceService.class);
-        return financeService != null ? financeService.value().trim() : "";
+        Locator locator = serviceInterface.getAnnotation(Locator.class);
+        return locator != null ? locator.value().trim() : "";
     }
 
     private String resolveProcessorClassName(Class<?> serviceInterface) {

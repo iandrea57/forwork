@@ -4,7 +4,7 @@
  */
 package com.renren.finance.service.locator.factory;
 
-import com.renren.finance.service.locator.curator.Node;
+import com.renren.finance.service.locator.model.Node;
 import org.apache.thrift.transport.TTransport;
 
 /**

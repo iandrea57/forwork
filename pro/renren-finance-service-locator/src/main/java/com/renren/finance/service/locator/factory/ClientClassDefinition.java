@@ -4,7 +4,7 @@
  */
 package com.renren.finance.service.locator.factory;
 
-import com.renren.finance.service.locator.annotation.FinanceService;
+import com.renren.finance.service.locator.annotation.Locator;
 import org.apache.thrift.protocol.TProtocol;
 
 import java.lang.reflect.Constructor;
@@ -28,8 +28,8 @@ public class ClientClassDefinition {
     }
 
     private String resolveServiceId(Class<?> serviceInterface) {
-        FinanceService financeService = serviceInterface.getAnnotation(FinanceService.class);
-        return financeService != null ? financeService.value().trim() : "";
+        Locator locator = serviceInterface.getAnnotation(Locator.class);
+        return locator != null ? locator.value().trim() : "";
     }
 
     private String resolveClientClassName(Class<?> serviceInterface) {

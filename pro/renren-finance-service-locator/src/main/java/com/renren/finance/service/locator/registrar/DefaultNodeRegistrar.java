@@ -5,7 +5,7 @@
 package com.renren.finance.service.locator.registrar;
 
 import com.renren.finance.service.locator.conf.LocatorConf;
-import com.renren.finance.service.locator.curator.NodeInstanceDetail;
+import com.renren.finance.service.locator.model.NodeInstanceDetail;
 import com.renren.finance.service.locator.register.RegisterInfo;
 import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;

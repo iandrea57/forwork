@@ -4,7 +4,7 @@
  */
 package com.renren.finance.service.locator.factory;
 
-import com.renren.finance.service.locator.curator.Node;
+import com.renren.finance.service.locator.model.Node;
 import com.renren.finance.service.locator.discoverer.DefaultNodeDiscoverer;
 import com.renren.finance.service.locator.discoverer.INodeDiscoverer;
 import org.apache.thrift.transport.TTransport;

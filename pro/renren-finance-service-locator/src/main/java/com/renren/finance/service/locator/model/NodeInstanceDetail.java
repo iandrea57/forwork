@@ -2,7 +2,7 @@
  * $Id$
  * Copyright 2011-2013 Oak Pacific Interactive. All rights reserved.
  */
-package com.renren.finance.service.locator.curator;
+package com.renren.finance.service.locator.model;
 
 import java.util.List;
 

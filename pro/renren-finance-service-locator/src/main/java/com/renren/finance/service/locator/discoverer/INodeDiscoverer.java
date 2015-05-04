@@ -1,6 +1,6 @@
 package com.renren.finance.service.locator.discoverer;
 
-import com.renren.finance.service.locator.curator.Node;
+import com.renren.finance.service.locator.model.Node;
 
 /**
  * @author <a href="mailto:hailong.peng@renren-inc.com">彭海龙</a>

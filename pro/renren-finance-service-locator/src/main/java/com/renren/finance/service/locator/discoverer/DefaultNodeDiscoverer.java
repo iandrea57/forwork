@@ -5,9 +5,9 @@
 package com.renren.finance.service.locator.discoverer;
 
 import com.renren.finance.service.locator.conf.LocatorConf;
-import com.renren.finance.service.locator.curator.NodeInstanceDetail;
-import com.renren.finance.service.locator.curator.ServiceNode;
-import com.renren.finance.service.locator.curator.Node;
+import com.renren.finance.service.locator.model.NodeInstanceDetail;
+import com.renren.finance.service.locator.model.ServiceNode;
+import com.renren.finance.service.locator.model.Node;
 import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;

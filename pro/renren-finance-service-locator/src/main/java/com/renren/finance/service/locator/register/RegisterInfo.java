@@ -4,8 +4,8 @@
  */
 package com.renren.finance.service.locator.register;
 
-import com.renren.finance.service.locator.curator.ServiceNode;
-import com.renren.finance.service.locator.curator.Node;
+import com.renren.finance.service.locator.model.ServiceNode;
+import com.renren.finance.service.locator.model.Node;
 import com.renren.finance.service.locator.util.IpUtils;
 
 import java.util.ArrayList;
@@ -24,6 +24,12 @@ public class RegisterInfo {
     private List<String> alarmPhones;
 
     private List<String> alarmEmails;
+
+    private int selectorThreads;
+
+    private int coreSize;
+
+    private int maxSize;
 
     private RegisterInfo() {}
 
@@ -117,6 +123,27 @@ public class RegisterInfo {
     }
 
 
+    public int getSelectorThreads() {
+        return selectorThreads;
+    }
 
+    public void setSelectorThreads(int selectorThreads) {
+        this.selectorThreads = selectorThreads;
+    }
 
+    public int getCoreSize() {
+        return coreSize;
+    }
+
+    public void setCoreSize(int coreSize) {
+        this.coreSize = coreSize;
+    }
+
+    public int getMaxSize() {
+        return maxSize;
+    }
+
+    public void setMaxSize(int maxSize) {
+        this.maxSize = maxSize;
+    }
 }
