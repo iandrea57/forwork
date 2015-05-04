@@ -4,8 +4,9 @@
  */
 package com.renren.finance.service.locator.factory;
 
-import com.renren.finance.service.locator.discoverer.DefaultServiceDiscoverer;
-import com.renren.finance.service.locator.discoverer.IServiceDiscoverer;
+import com.renren.finance.service.locator.curator.Node;
+import com.renren.finance.service.locator.discoverer.DefaultNodeDiscoverer;
+import com.renren.finance.service.locator.discoverer.INodeDiscoverer;
 import org.apache.thrift.transport.TTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,18 +15,17 @@ import org.slf4j.LoggerFactory;
  * @author <a href="mailto:hailong.peng@renren-inc.com">彭海龙</a>
  * @createTime 15-4-17 下午6:00
  */
-public class CommonServiceRouter implements ServiceRouter {
+public class ServiceTransportDiscoverer {
 
-    private static final Logger logger = LoggerFactory.getLogger(CommonServiceRouter.class);
+    private static final Logger logger = LoggerFactory.getLogger(ServiceTransportDiscoverer.class);
 
-    private static CommonServiceRouter instance = new CommonServiceRouter();
+    private static ServiceTransportDiscoverer instance = new ServiceTransportDiscoverer();
 
     private TTransportProvider connectionProvider = new TTransportProvider();
 
-    private IServiceDiscoverer serviceDiscoverer = DefaultServiceDiscoverer.getInstance();
+    private INodeDiscoverer nodeDiscoverer = DefaultNodeDiscoverer.getInstance();
 
-    @Override
-    public FinanceTransport routeService(String serviceId, int timeout) throws Exception {
+    public ServiceTransport get(String serviceId, int timeout) throws Exception {
         if (!isValidServiceId(serviceId)) {
             throw new IllegalArgumentException("serviceId invalid!");
         }
@@ -33,16 +33,16 @@ public class CommonServiceRouter implements ServiceRouter {
         Node node = null;
         int retry = 0;
         TTransport transport = null;
-        FinanceTransport financeTransport = null;
+        ServiceTransport serviceTransport = null;
         while (true) {
-            node = serviceDiscoverer.getNode(serviceId);
+            node = nodeDiscoverer.getNode(serviceId);
             if (node == null) {
                 logger.error("No endpoint available : " + serviceId);
                 return null;
             }
-            financeTransport = new FinanceTransport();
-            financeTransport.setNode(node);
-            financeTransport.setTimeout(timeout);
+            serviceTransport = new ServiceTransport();
+            serviceTransport.setNode(node);
+            serviceTransport.setTimeout(timeout);
             try {
                 transport = connectionProvider.getConnection(node, timeout);
                 break;
@@ -55,8 +55,8 @@ public class CommonServiceRouter implements ServiceRouter {
             logger.debug("get service ok : " + serviceId);
         }
 
-        financeTransport.setTransport(transport);
-        return financeTransport;
+        serviceTransport.setTransport(transport);
+        return serviceTransport;
     }
 
     private boolean isValidServiceId(String serviceId) {
@@ -66,17 +66,15 @@ public class CommonServiceRouter implements ServiceRouter {
         return true;
     }
 
-    @Override
-    public void returnConn(FinanceTransport financeTransport) throws Exception {
-        connectionProvider.returnConnection(financeTransport.getNode(),
-                financeTransport.getTimeout(), financeTransport.getTransport());
+    public void returnConn(ServiceTransport serviceTransport) throws Exception {
+        connectionProvider.returnConnection(serviceTransport.getNode(),
+                serviceTransport.getTimeout(), serviceTransport.getTransport());
     }
 
-    @Override
-    public void serviceException(String serviceId, Throwable e, FinanceTransport financeTransport) {
+    public void serviceException(String serviceId, Throwable e, ServiceTransport serviceTransport) {
     }
 
-    public static CommonServiceRouter getInstance() {
+    public static ServiceTransportDiscoverer getInstance() {
         return instance;
     }
 }

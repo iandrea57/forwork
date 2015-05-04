@@ -75,7 +75,7 @@ public class LocatorConf {
                 if (confFile.exists()) {
                     reader = new InputStreamReader(new FileInputStream(confFile), "UTF-8");
                 } else {
-                    reader = new InputStreamReader(LocatorConf.class.getResourceAsStream("/" + DEFAULT_CONF_FILE));
+                    reader = new InputStreamReader(LocatorConf.class.getResourceAsStream(DEFAULT_CONF_FILE));
                 }
                 Properties props = new Properties();
                 props.load(reader);

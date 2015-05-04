@@ -22,12 +22,15 @@ public class NodeInstanceDetail {
 
     private List<String> alarmPhones;
 
-    public NodeInstanceDetail(String id, String ip, int port, String interfaceName, List<String> alarmPhones) {
+    private List<String> alarmEmails;
+
+    public NodeInstanceDetail(String id, String ip, int port, String interfaceName, List<String> alarmPhones, List<String> alarmEmails) {
         this.id = id;
         this.ip = ip;
         this.port = port;
         this.interfaceName = interfaceName;
         this.alarmPhones = alarmPhones;
+        this.alarmEmails = alarmEmails;
     }
 
     public NodeInstanceDetail() {}
@@ -80,5 +83,13 @@ public class NodeInstanceDetail {
 
     public void setAlarmPhones(List<String> alarmPhones) {
         this.alarmPhones = alarmPhones;
+    }
+
+    public List<String> getAlarmEmails() {
+        return alarmEmails;
+    }
+
+    public void setAlarmEmails(List<String> alarmEmails) {
+        this.alarmEmails = alarmEmails;
     }
 }

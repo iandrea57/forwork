@@ -7,7 +7,7 @@ package com.renren.finance.service.locator.discoverer;
 import com.renren.finance.service.locator.conf.LocatorConf;
 import com.renren.finance.service.locator.curator.NodeInstanceDetail;
 import com.renren.finance.service.locator.curator.ServiceNode;
-import com.renren.finance.service.locator.factory.Node;
+import com.renren.finance.service.locator.curator.Node;
 import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
@@ -28,9 +28,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author <a href="mailto:hailong.peng@renren-inc.com">彭海龙</a>
  * @createTime 15-4-7 下午4:25
  */
-public class DefaultServiceDiscoverer implements IServiceDiscoverer {
+public class DefaultNodeDiscoverer implements INodeDiscoverer {
 
-    private static final Logger logger = LoggerFactory.getLogger(DefaultServiceDiscoverer.class);
+    private static final Logger logger = LoggerFactory.getLogger(DefaultNodeDiscoverer.class);
 
     private ServiceDiscovery<NodeInstanceDetail> serviceDiscovery;
 
@@ -38,9 +38,9 @@ public class DefaultServiceDiscoverer implements IServiceDiscoverer {
 
     private static class DiscovererHolder {
 
-        private static final DefaultServiceDiscoverer instance = getDiscoverer();
+        private static final DefaultNodeDiscoverer instance = getDiscoverer();
 
-        private static DefaultServiceDiscoverer getDiscoverer() {
+        private static DefaultNodeDiscoverer getDiscoverer() {
             LocatorConf conf = LocatorConf.instance();
 
             RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 3);
@@ -50,9 +50,9 @@ public class DefaultServiceDiscoverer implements IServiceDiscoverer {
                     .build();
             client.start();
 
-            DefaultServiceDiscoverer discoverer = null;
+            DefaultNodeDiscoverer discoverer = null;
             try {
-                discoverer = new DefaultServiceDiscoverer(client, conf.getBasePath());
+                discoverer = new DefaultNodeDiscoverer(client, conf.getBasePath());
             } catch (Exception e) {
                 e.printStackTrace();
                 logger.error("DefaultServiceDiscoverer.DiscovererHolder.getDiscoverer", e);
@@ -61,7 +61,7 @@ public class DefaultServiceDiscoverer implements IServiceDiscoverer {
         }
     }
 
-    private DefaultServiceDiscoverer(CuratorFramework client, String basePath) throws Exception {
+    private DefaultNodeDiscoverer(CuratorFramework client, String basePath) throws Exception {
         serviceDiscovery = ServiceDiscoveryBuilder.builder(NodeInstanceDetail.class)
                 .client(client)
                 .basePath(basePath)
@@ -69,7 +69,7 @@ public class DefaultServiceDiscoverer implements IServiceDiscoverer {
         serviceDiscovery.start();
     }
 
-    public static IServiceDiscoverer getInstance() {
+    public static INodeDiscoverer getInstance() {
         return DiscovererHolder.instance;
     }
 

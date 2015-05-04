@@ -12,7 +12,7 @@ import java.lang.reflect.Constructor;
  * @author <a href="mailto:hailong.peng@renren-inc.com">彭海龙</a>
  * @createTime 15-4-28 下午5:37
  */
-public class ServerDefinition {
+public class ServerClassDefinition {
 
     private String serviceId;
 
@@ -20,7 +20,7 @@ public class ServerDefinition {
 
     private Constructor<?> serviceProcessorConstructor;
 
-    public ServerDefinition(Class<?> serviceInterface) throws ClassNotFoundException, NoSuchMethodException {
+    public ServerClassDefinition(Class<?> serviceInterface) throws ClassNotFoundException, NoSuchMethodException {
         this.serviceProcessorClass = Class.forName(resolveProcessorClassName(serviceInterface));
         this.serviceId = resolveServiceId(serviceInterface);
         this.serviceProcessorConstructor = serviceProcessorClass.getConstructor(getIfaceClass(serviceInterface));

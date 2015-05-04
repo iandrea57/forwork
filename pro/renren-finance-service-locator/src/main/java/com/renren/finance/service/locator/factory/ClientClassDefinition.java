@@ -13,7 +13,7 @@ import java.lang.reflect.Constructor;
  * @author <a href="mailto:hailong.peng@renren-inc.com">彭海龙</a>
  * @createTime 15-4-17 下午4:50
  */
-public class ClassDefinition {
+public class ClientClassDefinition {
 
     private String serviceId;
 
@@ -21,7 +21,7 @@ public class ClassDefinition {
 
     private Constructor<?> serviceClientConstructor;
 
-    public ClassDefinition(Class<?> serviceInterface) throws ClassNotFoundException, NoSuchMethodException {
+    public ClientClassDefinition(Class<?> serviceInterface) throws ClassNotFoundException, NoSuchMethodException {
         this.serviceClientClass = Class.forName(resolveClientClassName(serviceInterface));
         this.serviceId = resolveServiceId(serviceInterface);
         this.serviceClientConstructor = serviceClientClass.getConstructor(TProtocol.class);

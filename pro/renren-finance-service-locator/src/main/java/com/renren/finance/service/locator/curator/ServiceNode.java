@@ -4,8 +4,6 @@
  */
 package com.renren.finance.service.locator.curator;
 
-import com.renren.finance.service.locator.factory.Node;
-
 /**
  * @author <a href="mailto:hailong.peng@renren-inc.com">彭海龙</a>
  * @createTime 15-4-20 下午2:40
@@ -17,7 +15,6 @@ public class ServiceNode implements Node {
 
     private boolean disabled;
     private boolean healthy;
-
 
     @Override
     public String getHost() {

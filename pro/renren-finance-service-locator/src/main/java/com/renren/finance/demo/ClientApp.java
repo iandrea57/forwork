@@ -2,7 +2,7 @@
  * $Id$
  * Copyright 2011-2013 Oak Pacific Interactive. All rights reserved.
  */
-package com.renren.finance.service.locator.curator;
+package com.renren.finance.demo;
 
 import com.mmz.frameworkuse.thrift.IInfoService;
 import com.mmz.service.api.GetInfoRequest;

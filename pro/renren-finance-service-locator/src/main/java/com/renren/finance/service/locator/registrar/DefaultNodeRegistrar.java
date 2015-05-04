@@ -24,29 +24,31 @@ import java.util.UUID;
  * @author <a href="mailto:hailong.peng@renren-inc.com">彭海龙</a>
  * @createTime 15-4-7 下午4:01
  */
-public class DefaultServiceRegistrar implements IServiceRegistrar {
+public class DefaultNodeRegistrar implements INodeRegistrar {
 
-    private static final Logger logger = LoggerFactory.getLogger(DefaultServiceRegistrar.class);
+    private static final Logger logger = LoggerFactory.getLogger(DefaultNodeRegistrar.class);
 
     private ServiceDiscovery<NodeInstanceDetail> serviceDiscovery;
 
     private static class RegistrarHolder {
 
-        private static final DefaultServiceRegistrar instance = getRegistrar();
+        private static final DefaultNodeRegistrar instance = getRegistrar();
 
-        private static DefaultServiceRegistrar getRegistrar() {
+        private static DefaultNodeRegistrar getRegistrar() {
             LocatorConf conf = LocatorConf.instance();
 
             RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 3);
             CuratorFramework client = CuratorFrameworkFactory.builder()
                     .connectString(conf.getCluster())
                     .retryPolicy(retryPolicy)
+                    .connectionTimeoutMs(1000)
+                    .sessionTimeoutMs(1000)
                     .build();
             client.start();
 
-            DefaultServiceRegistrar discoverer = null;
+            DefaultNodeRegistrar discoverer = null;
             try {
-                discoverer = new DefaultServiceRegistrar(client, conf.getBasePath());
+                discoverer = new DefaultNodeRegistrar(client, conf.getBasePath());
             } catch (Exception e) {
                 e.printStackTrace();
                 logger.error("DefaultServiceDiscoverer.DiscovererHolder.getDiscoverer", e);
@@ -55,7 +57,7 @@ public class DefaultServiceRegistrar implements IServiceRegistrar {
         }
     }
 
-    public DefaultServiceRegistrar(CuratorFramework client, String basePath) throws Exception {
+    public DefaultNodeRegistrar(CuratorFramework client, String basePath) throws Exception {
         serviceDiscovery = ServiceDiscoveryBuilder.builder(NodeInstanceDetail.class)
                 .client(client)
                 .basePath(basePath)
@@ -63,7 +65,7 @@ public class DefaultServiceRegistrar implements IServiceRegistrar {
         serviceDiscovery.start();
     }
 
-    public static IServiceRegistrar getInstance() {
+    public static INodeRegistrar getInstance() {
         return RegistrarHolder.instance;
     }
 
@@ -75,7 +77,7 @@ public class DefaultServiceRegistrar implements IServiceRegistrar {
                 .name(serviceId)
                 .port(port)
                 .address(host)
-                .payload(new NodeInstanceDetail(UUID.randomUUID().toString(),host,port,info.getInterfaceName(), info.getPhones()))
+                .payload(new NodeInstanceDetail(UUID.randomUUID().toString(),host,port,info.getInterfaceName(), info.getAlarmPhones(), info.getAlarmEmails()))
                 .uriSpec(new UriSpec("{scheme}://{address}:{port}"))
                 .build();
         serviceDiscovery.registerService(instance);
@@ -89,7 +91,7 @@ public class DefaultServiceRegistrar implements IServiceRegistrar {
                 .name(serviceId)
                 .port(port)
                 .address(host)
-                .payload(new NodeInstanceDetail(UUID.randomUUID().toString(),host,port,info.getInterfaceName(), info.getPhones()))
+                .payload(new NodeInstanceDetail(UUID.randomUUID().toString(),host,port,info.getInterfaceName(), info.getAlarmPhones(), info.getAlarmEmails()))
                 .uriSpec(new UriSpec("{scheme}://{address}:{port}"))
                 .build();
         serviceDiscovery.unregisterService(instance);

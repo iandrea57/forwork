@@ -24,20 +24,20 @@ public class ServiceInvocationHandler implements InvocationHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(ServiceInvocationHandler.class);
     private static final int MAX_RETRY = 1;
-    private ClassDefinition serviceDefinition;
-    private ServiceRouter serviceRouter;
+    private ClientClassDefinition serviceDefinition;
+    private ServiceTransportDiscoverer serviceTransportDiscoverer;
     private int timeout;
-    private ConcurrentMap<Method, MethodDefinition> methodCache = new ConcurrentHashMap<Method, MethodDefinition>();
+    private ConcurrentMap<Method, Method> methodCache = new ConcurrentHashMap<Method, Method>();
 
-    public ServiceInvocationHandler(ClassDefinition serviceDefinition, int timeout) {
-        this(CommonServiceRouter.getInstance(), serviceDefinition, timeout);
+    public ServiceInvocationHandler(ClientClassDefinition serviceDefinition, int timeout) {
+        this(ServiceTransportDiscoverer.getInstance(), serviceDefinition, timeout);
     }
 
-    public ServiceInvocationHandler(ServiceRouter serviceRouter, ClassDefinition serviceDefinition, int timeout) {
-        if (serviceRouter == null || serviceDefinition == null) {
+    public ServiceInvocationHandler(ServiceTransportDiscoverer serviceTransportDiscoverer, ClientClassDefinition serviceDefinition, int timeout) {
+        if (serviceTransportDiscoverer == null || serviceDefinition == null) {
             throw new NullPointerException();
         }
-        this.serviceRouter = serviceRouter;
+        this.serviceTransportDiscoverer = serviceTransportDiscoverer;
         this.serviceDefinition = serviceDefinition;
         this.timeout = timeout;
     }
@@ -46,12 +46,12 @@ public class ServiceInvocationHandler implements InvocationHandler {
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         String serviceId = serviceDefinition.getServiceId();
 
-        FinanceTransport financeTransport = null;
+        ServiceTransport serviceTransport = null;
         int retry = 0;
         try {
             while (true) {
-                financeTransport = serviceRouter.routeService(serviceId, timeout);
-                if (financeTransport != null) {
+                serviceTransport = serviceTransportDiscoverer.get(serviceId, timeout);
+                if (serviceTransport != null) {
                     break;
                 }
                 if (++retry >= MAX_RETRY) {
@@ -59,33 +59,32 @@ public class ServiceInvocationHandler implements InvocationHandler {
                     return null;
                 }
             }
-            TProtocol protocol = new TBinaryProtocol(financeTransport.getTransport());
+            TProtocol protocol = new TBinaryProtocol(serviceTransport.getTransport());
             Object client = serviceDefinition.getServiceClientConstructor().newInstance(protocol);
-            Object result = getRealMethod(method).getMethod().invoke(client, args);
-            serviceRouter.returnConn(financeTransport);
+            Object result = getRealMethod(method).invoke(client, args);
+            serviceTransportDiscoverer.returnConn(serviceTransport);
             return result;
         } catch (InvocationTargetException e) {
             Throwable cause = e.getCause();
             if (cause instanceof TBase) {
-                serviceRouter.returnConn(financeTransport);
+                serviceTransportDiscoverer.returnConn(serviceTransport);
                 logger.error("Thrift service return exception");
             }
             throw cause;
         } catch (Exception e) {
-            serviceRouter.serviceException(serviceId, e, financeTransport);
+            serviceTransportDiscoverer.serviceException(serviceId, e, serviceTransport);
             throw new Exception("failed to route " + serviceId, e);
         }
     }
 
-    private MethodDefinition getRealMethod(Method method) throws NoSuchMethodException {
-        MethodDefinition methodDefinition = methodCache.get(method);
-        if (methodDefinition != null) {
-            return methodDefinition;
+    private Method getRealMethod(Method method) throws NoSuchMethodException {
+        Method realMethod = methodCache.get(method);
+        if (realMethod != null) {
+            return realMethod;
         }
-        Method realMethod = serviceDefinition.getServiceClientClass().getMethod(method.getName(),
+        realMethod = serviceDefinition.getServiceClientClass().getMethod(method.getName(),
                 method.getParameterTypes());
-        methodDefinition = new MethodDefinition(realMethod);
-        methodCache.put(method, methodDefinition);
-        return methodDefinition;
+        methodCache.put(method, realMethod);
+        return realMethod;
     }
 }

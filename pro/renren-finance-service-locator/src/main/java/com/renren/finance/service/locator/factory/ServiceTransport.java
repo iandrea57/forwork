@@ -4,13 +4,14 @@
  */
 package com.renren.finance.service.locator.factory;
 
+import com.renren.finance.service.locator.curator.Node;
 import org.apache.thrift.transport.TTransport;
 
 /**
  * @author <a href="mailto:hailong.peng@renren-inc.com">彭海龙</a>
  * @createTime 15-4-17 下午5:56
  */
-public class FinanceTransport {
+public class ServiceTransport {
 
     private TTransport transport;
 

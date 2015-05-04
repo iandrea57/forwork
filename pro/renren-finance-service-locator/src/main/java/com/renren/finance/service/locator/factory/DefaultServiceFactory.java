@@ -36,7 +36,7 @@ public class DefaultServiceFactory implements IServiceFactory {
         }
 
         try {
-            ClassDefinition serviceDefinition = new ClassDefinition(serviceInterface);
+            ClientClassDefinition serviceDefinition = new ClientClassDefinition(serviceInterface);
             InvocationHandler handler = createInvocationHandler(serviceDefinition, timeout);
             T proxy = (T) Proxy.newProxyInstance(ClassUtils.getDefaultClassLoader(), new Class[] {serviceInterface}, handler);
             Object temp = serviceCache.putIfAbsent(serviceInterface, proxy);
@@ -47,7 +47,7 @@ public class DefaultServiceFactory implements IServiceFactory {
         }
     }
 
-    private InvocationHandler createInvocationHandler(ClassDefinition serviceDefinition, int timeout) {
+    private InvocationHandler createInvocationHandler(ClientClassDefinition serviceDefinition, int timeout) {
         return new ServiceInvocationHandler(serviceDefinition, timeout);
     }
 }
