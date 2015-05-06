@@ -7,7 +7,13 @@ public class User {
 
     private int id;
 
-    private int name;
+    private String last_name;
+
+    public User() {}
+
+    public User(String last_name) {
+        this.last_name = last_name;
+    }
 
     public int getId() {
         return id;
@@ -17,19 +23,19 @@ public class User {
         this.id = id;
     }
 
-    public int getName() {
-        return name;
+    public String getLast_name() {
+        return last_name;
     }
 
-    public void setName(int name) {
-        this.name = name;
+    public void setLast_name(String last_name) {
+        this.last_name = last_name;
     }
 
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", name=" + name +
-                '}';
+                ", last_name='" + last_name + '\'' +
+                "} " + super.toString();
     }
 }

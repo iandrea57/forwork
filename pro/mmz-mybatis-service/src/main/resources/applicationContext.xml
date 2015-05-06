@@ -1,32 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:tx="http://www.springframework.org/schema/tx"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
+    <context:component-scan base-package="com.mmz.mybatis" />
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
-        <property name="url" value="jdbc:mysql://localhost:3306/mmz"/>
+        <property name="url" value="jdbc:mysql://10.3.19.157:3306/fb?useUnicode=true&amp;characterEncoding=UTF-8" />
         <property name="username" value="root"/>
-        <property name="password" value=""/>
+        <property name="password" value="geek2010"/>
     </bean>
-
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="configLocation" value="classpath:mybatis_conf.xml" />
         <property name="dataSource" ref="dataSource" />
     </bean>
-
-    <context:component-scan base-package="com.mmz.mybatis" />
-
-    <!--<bean id="userMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-        <property name="mapperInterface" value="com.mmz.mybatis.dao.UserDAO" />
-        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
-    </bean>-->
-
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="com.mmz.mybatis.dao" />
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+        <property name="annotationClass" value="com.mmz.mybatis.annotation.DataSourceLbs" />
     </bean>
+    <bean id="txManagerDefault" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    <tx:annotation-driven transaction-manager="txManagerDefault" />
+
+
+    <!--<bean id="xceAdapter" class="com.xiaonei.xce.XceAdapter" init-method="getInstance" />
+    <bean id="test_lbs_dataSource" factory-bean="xceAdapter" factory-method="getWriteDataSource" >
+        <constructor-arg value="test_lbs" />
+    </bean>-->
+
+    <bean id="test_lbs_dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/test?useUnicode=true&amp;characterEncoding=UTF-8" />
+        <property name="username" value="root"/>
+        <property name="password" value=""/>
+    </bean>
+
+    <bean id="lbsSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="configLocation" value="classpath:mybatis_conf.xml" />
+        <property name="dataSource" ref="test_lbs_dataSource" />
+    </bean>
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.mmz.mybatis.dao" />
+        <property name="sqlSessionFactoryBeanName" value="lbsSessionFactory" />
+        <property name="annotationClass" value="com.mmz.mybatis.annotation.DataSourceDefault" />
+    </bean>
+
+    <!-- Transaction -->
+    <bean id="txManagerLbs" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="test_lbs_dataSource" />
+    </bean>
+    <tx:annotation-driven transaction-manager="txManagerLbs" />
 
 </beans>

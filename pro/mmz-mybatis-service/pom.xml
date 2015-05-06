@@ -6,7 +6,7 @@
     <groupId>com.mmz</groupId>
     <artifactId>mmz-mybatis-service</artifactId>
     <packaging>jar</packaging>
-    <version>1.0-SNAPSHORT</version>
+    <version>1.0-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
@@ -56,6 +56,12 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.34</version>
         </dependency>
+        <dependency>
+            <groupId>com.xiaonei.xce</groupId>
+            <artifactId>oce-dbjavapool</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
     </dependencies>
 
     <build>

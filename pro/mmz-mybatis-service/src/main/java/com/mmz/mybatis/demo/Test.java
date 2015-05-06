@@ -1,6 +1,9 @@
 package com.mmz.mybatis.demo;
 
+import com.mmz.mybatis.dao.AgentDAO;
 import com.mmz.mybatis.dao.UserDAO;
+import com.mmz.mybatis.service.TestService;
+import com.xiaonei.xce.dbpool.XceDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -13,17 +16,35 @@ import org.springframework.stereotype.Component;
 public class Test {
 
     @Autowired
-    private UserDAO userMapper;
+    private TestService testService;
 
-    public void test() {
-//        System.out.println(userMapper.getAll());
-        System.out.println(userMapper.getAllNames());
+    public void test(int i) {
+        testService.preTransactional();
+        i = i % 3;
+        try {
+            switch (i) {
+                case 0:
+                    testService.testTransactional();
+                    break;
+                case 1:
+                    testService.testNoTransactional();
+                    break;
+                case 2:
+                    testService.testOtherTransactional();
+                    break;
+            }
+        } catch (IllegalStateException e) {
+
+        }
+        testService.afterTransactionl(i);
     }
-
 
     public static void main(String[] args) {
         ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
-        Test test = (Test) context.getBean("test", Test.class);
-        test.test();
+        Test test = context.getBean("test", Test.class);
+        for (int i = 0; i < 12; i++) {
+            test.test(i);
+        }
+        System.exit(0);
     }
 }
