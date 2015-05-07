@@ -4,6 +4,7 @@ import com.mmz.mybatis.annotation.DataSourceDefault;
 import com.mmz.mybatis.model.User;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 import xce.userapicache.TABLEBORN;
 
@@ -21,7 +22,8 @@ public interface UserDAO {
     public List<User> getAll();
 
     @Insert({"insert into " + TABLE + " set last_name = #{last_name} "})
-    public void insert(User user);
+    @Options(useGeneratedKeys = true)
+    public int insert(User user);
 
     @Delete("delete from " + TABLE + " where last_name = #{last_name} ")
     public void delete(User user);

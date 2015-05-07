@@ -42,9 +42,10 @@ public class Test {
     public static void main(String[] args) {
         ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
         Test test = context.getBean("test", Test.class);
-        for (int i = 0; i < 12; i++) {
+        for (int i = 0; i < 3; i++) {
             test.test(i);
         }
+//        test.test(2);
         System.exit(0);
     }
 }

@@ -98,10 +98,15 @@ public class TestService {
         System.out.println("finish change ");
     }
 
+    public void insert() {
+        int id = userDAO.insert(user1);
+        System.out.println("id = " + id);
+    }
+
     public static void main(String[] args) {
         ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
         TestService test = context.getBean("testService", TestService.class);
-        test.test();
+        test.insert();
         System.exit(0);
     }
 }
