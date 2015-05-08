@@ -19,7 +19,7 @@ public class Test {
     private TestService testService;
 
     public void test(int i) {
-        testService.preTransactional();
+//        testService.preTransactional();
         i = i % 3;
         try {
             switch (i) {
@@ -36,7 +36,7 @@ public class Test {
         } catch (IllegalStateException e) {
 
         }
-        testService.afterTransactionl(i);
+//        testService.afterTransactionl(i);
     }
 
     public static void main(String[] args) {

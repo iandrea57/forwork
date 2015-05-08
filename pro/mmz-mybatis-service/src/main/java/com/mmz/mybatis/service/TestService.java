@@ -86,6 +86,7 @@ public class TestService {
     public void testOtherTransactional() {
 
         userDAO.insert(user1);
+        userDAO.insert(user2);
         int i = new Random().nextInt(20);
         if (i > threshold) {
             System.out.println("error");
