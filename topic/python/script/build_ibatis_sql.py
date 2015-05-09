@@ -6,7 +6,7 @@ import MySQLdb
 
 
 def cols_and_coltype_dict_from_create_sql(create_sql):
-    p_cols_types = re.compile(r'`(.+?)` (.+?)(\([0-9,]+\))? .*,')
+    p_cols_types = re.compile(r'`(.+?)` ([a-z]+?)(\([0-9,]+\))? .*,')
     items = p_cols_types.findall(create_sql)
     cols = []
     coltype_dict = {}
@@ -123,6 +123,7 @@ def mybatis_replace(variable, default_dict = {}):
     else:
         return default_dict[variable]
 
+
 def javaclass_from_table_cols_type_variable(table, cols, col_variable_dict, coltype_dict):
     classname_and_objname = classname_and_objname_from_table(table)
     javaclass = ''
@@ -147,9 +148,9 @@ def deal_create_sql(create_sql):
     javaclass = javaclass_from_table_cols_type_variable(table, cols, col_variable_dict, coltype_dict)
     print '%s\n\n\n\n\n\n' % javaclass
 
-def deal_mysql(host='localhost',port=3306,user='root',passwd='',db='test',table=None):
+def deal_mysql(host='localhost',port=3306,user='root',passwd='',db='ara',table=None):
     try:
-        conn=MySQLdb.connect(host='localhost',user='root',passwd='',db='ara',port=3306)
+        conn=MySQLdb.connect(host=host,user=user,passwd=passwd,db=db,port=port)
         cur=conn.cursor()
         tables = []
         if table == None:
@@ -163,8 +164,8 @@ def deal_mysql(host='localhost',port=3306,user='root',passwd='',db='test',table=
         for t in tables:
             cur.execute('show create table %s' % t)
             create_sql = cur.fetchall()[0][1]
+            print_sql_create(create_sql)
             deal_create_sql(create_sql)
-
 
         cur.close()
         conn.close()
@@ -172,7 +173,14 @@ def deal_mysql(host='localhost',port=3306,user='root',passwd='',db='test',table=
          print "Mysql Error %d: %s" % (e.args[0], e.args[1])
 
 
-
+def print_sql_create(create_sql):
+    to_print = ''
+    to_print += '\n    /**'
+    to_print += '\n     * <pre>'
+    to_print += '\n     * ' + create_sql.replace('\n' , '\n     * ')
+    to_print += '\n     * </pre>'
+    to_print += '\n     */'
+    print '\n\n%s\n\n' % to_print
 
 
 mysqltype_javatype_dict = {
@@ -183,9 +191,10 @@ mysqltype_javatype_dict = {
     'varchar' : 'String',
     'decimal' : 'double',
     'char' : 'String',
-    'double' : 'double'
+    'double' : 'double',
+    'text' : 'String'
 }
 
 
 if __name__ == '__main__':
-    deal_mysql()
+    deal_mysql(host='10.4.32.131',port=3306,user='tango_master',passwd='nidaye',db='waltz_base')
