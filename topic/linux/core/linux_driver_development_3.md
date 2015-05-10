@@ -16,3 +16,10 @@ If your module needs to export symbols for other modules to use, the following m
     MODULE_ALIAS (another name by which this module can be known), 
     MODULE_DEVICE_TABLE (to tell user space about which devices the module supports).
     
+    
+The actual definition of the initialization function always looks like:
+
+    static int __init initialization_function(void) {         /* Initialization code here */     }     module_init(initialization_function);
+The **__init** token in the definition is a hint to the kernel that the given function is used only at initialization time. The module loader drops the initialization function after the module is loaded, making its memory available for other uses. There is asimilartag(**__initdata**)for data used only during initialization. Useof \_\_initand \_\_initdata is optional, but it is worth the trouble.
+You may also encounter **__devinit** and **__devinitdata** in the kernel source; these trans- late to \_\_init and \_\_initdata only if the kernel has not been configured for hotplug- gable devices. The use of **module_init** is mandatory. This macro adds a special section to the module’s object code stating where the module’s initialization function is to be found. Without this definition, your initialization function is never called.
+
