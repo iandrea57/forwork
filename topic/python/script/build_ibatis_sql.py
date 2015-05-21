@@ -197,4 +197,4 @@ mysqltype_javatype_dict = {
 
 
 if __name__ == '__main__':
-    deal_mysql(host='10.4.32.131',port=3306,user='tango_master',passwd='nidaye',db='waltz_base')
+    deal_mysql(host='10.4.32.131',port=3306,user='tango_master',passwd='nidaye',db='waltz_base',table='capital_order')
