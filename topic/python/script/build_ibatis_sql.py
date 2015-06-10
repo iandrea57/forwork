@@ -189,12 +189,13 @@ mysqltype_javatype_dict = {
     'bigint' : 'long',
     'timestamp' : 'Date',
     'varchar' : 'String',
-    'decimal' : 'double',
+    'decimal' : 'BigDecimal',
     'char' : 'String',
     'double' : 'double',
-    'text' : 'String'
+    'text' : 'String',
+    'date' : 'Date'
 }
 
 
 if __name__ == '__main__':
-    deal_mysql(host='10.4.32.131',port=3306,user='tango_master',passwd='nidaye',db='waltz_base',table='capital_order')
+    deal_mysql(host='10.4.32.131',port=3306,user='tango_master',passwd='nidaye',db='waltz_base',table='virtual_capital')
