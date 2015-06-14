@@ -49,3 +49,5 @@
     如果只是不小心给关了，需要再次连接，同样需要kill一下，然后再screen进行连接，否则也可能会出现could not find PTY的错误提示。
 
 
+![](http://img04.taobaocdn.com/imgextra/i4/406368984/T2lSPNXnxaXXXXXXXX_!!406368984.jpg)
+
