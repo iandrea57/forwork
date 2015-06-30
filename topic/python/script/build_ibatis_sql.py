@@ -196,6 +196,87 @@ mysqltype_javatype_dict = {
     'date' : 'Date'
 }
 
+def test_mysql(host='localhost',port=3306,user='root',passwd='',db='ara',table=None):
+    try:
+        conn=MySQLdb.connect(host=host,user=user,passwd=passwd,db=db,port=port)
+        cur=conn.cursor()
+        sql = 'select id, order_id, property_id from invest_order_property'
+        cur.execute(sql)
+        result = cur.fetchall()
+        r_count_map = {}
+        r_id_map = {}
+        delete_ids = []
+        for r in result:
+            rid = r[0]
+            order_id = r[1]
+            property_id = r[2]
+            key = str(r[1]) + '-' + str(r[2])
+            count = r_count_map.get(key, 0)
+            count += 1
+            r_count_map[key] = count
+            if count > 1:
+                delete_ids.append(str(r_id_map[key]))
+            else:
+                r_id_map[key] = rid 
+            
+
+        order_ids = []
+        for k,v in r_count_map.items():
+            if v > 1:
+                print k, v
+                order_ids.append(k.split('-')[0])
+
+        in_sql = '( ' + ', '.join(order_ids) + ' )'
+        select_sql = 'select id, account_id, product_id, direction, order_type from invest_order where id in ' + in_sql
+        cur.execute(select_sql)
+        select_result = cur.fetchall()
+        for r in select_result:
+            print r
+
+        delete_sql = 'delete from invest_order_property where id in ( ' + ', '.join(delete_ids) + ' )'
+        cur.execute(delete_sql)
+        conn.commit()
+
+        cur.close()
+        conn.close()
+    except MySQLdb.Error,e:
+         print "Mysql Error %d: %s" % (e.args[0], e.args[1])
+
+
+def test_mysql_2(host='localhost',port=3306,user='root',passwd='',db='ara',table=None):
+    try:
+        conn=MySQLdb.connect(host=host,user=user,passwd=passwd,db=db,port=port)
+        cur=conn.cursor()
+        sql = 'select i.order_id from invest_order_property i, invest_order o where i.order_id = o.id and o.direction = 1 group by i.order_id having count(i.property_id) > 1'
+        cur.execute(sql)
+        result = cur.fetchall()
+        r_count_map = {}
+        r_id_map = {}
+        delete_ids = []
+        for r in result:
+            print r
+            r_sql = 'select id, order_id, property_id from invest_order_property where order_id = %d ' % r[0]
+            cur.execute(r_sql)
+            r_result = cur.fetchall()
+            count = len(r_result)
+            print count
+            print r_result
+            for i in range(0, count - 1):
+                r_r = r_result[i]
+                delete_sql = 'delete from invest_order_property where id = %d ' % r_r[0]
+                cur.execute(delete_sql)
+                delete_sql = 'delete from invest_order where id = %d ' % r_r[1]
+                cur.execute(delete_sql)
+                delete_sql = 'delete from invest_property where id = %d ' % r_r[2]
+                cur.execute(delete_sql)
+                conn.commit()
+
+        cur.close()
+        conn.close()
+    except MySQLdb.Error,e:
+         print "Mysql Error %d: %s" % (e.args[0], e.args[1])
 
 if __name__ == '__main__':
-    deal_mysql(host='10.4.32.131',port=3306,user='tango_master',passwd='nidaye',db='waltz_base',table='virtual_capital')
+    # deal_mysql(host='10.4.32.131',port=3306,user='tango_master',passwd='nidaye',db='waltz_base',table='invest_order')
+    # test_mysql(host='10.4.32.131',port=3306,user='tango_master',passwd='nidaye',db='waltz_base',table='invest_order')
+    test_mysql_2(host='10.4.32.131',port=3306,user='tango_master',passwd='nidaye',db='waltz_base',table='invest_order')
